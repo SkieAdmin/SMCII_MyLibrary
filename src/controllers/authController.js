@@ -27,7 +27,10 @@ export const register = async (req, res, next) => {
     idNumber,
   } = req.body;
 
-  if (!ALLOWED_ROLES.includes(role)) {
+  const normalizedRole =
+    typeof role === 'string' ? role.trim().toLowerCase() : '';
+
+  if (!ALLOWED_ROLES.includes(normalizedRole)) {
     return res.status(400).json({
       success: false,
       message: `Invalid role. Allowed roles: ${ALLOWED_ROLES.join(', ')}`,
@@ -61,7 +64,7 @@ export const register = async (req, res, next) => {
     const createdUser = await prisma.user.create({
       data: {
         fullName,
-        role,
+        role: normalizedRole,
         email,
         password: hashedPassword,
         phoneNumber,

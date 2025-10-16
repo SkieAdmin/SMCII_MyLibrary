@@ -5,6 +5,7 @@ import authRoutes from './src/routes/authRoutes.js';
 import bookRoutes from './src/routes/bookRoutes.js';
 import transactionRoutes from './src/routes/transactionRoutes.js';
 import dashboardRoutes from './src/routes/dashboardRoutes.js';
+import userRoutes from './src/routes/userRoutes.js';
 import { notFound, errorHandler } from './src/middleware/errorMiddleware.js';
 
 const app = express();
@@ -24,12 +25,14 @@ app.use('/api/auth', authRoutes);
 app.use('/api/books', bookRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/users', userRoutes);
 
 // Support legacy/non-prefixed mobile clients while migrating to /api namespace.
 app.use('/auth', authRoutes);
 app.use('/books', bookRoutes);
 app.use('/transactions', transactionRoutes);
 app.use('/dashboard', dashboardRoutes);
+app.use('/users', userRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

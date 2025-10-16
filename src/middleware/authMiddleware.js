@@ -28,7 +28,9 @@ export const authenticate = async (req, res, next) => {
     }
 
     const { password, ...safeUser } = user;
-    req.user = safeUser;
+    const role =
+      typeof safeUser.role === 'string' ? safeUser.role.trim().toLowerCase() : '';
+    req.user = { ...safeUser, role };
     next();
   } catch (error) {
     return res.status(401).json({
@@ -48,7 +50,11 @@ export const authorizeRoles = (...allowedRoles) => (req, res, next) => {
     });
   }
 
-  if (!allowedRoles.includes(req.user.role)) {
+  const normalizedRole =
+    typeof req.user.role === 'string' ? req.user.role.toLowerCase() : '';
+  const normalizedAllowedRoles = allowedRoles.map((role) => role.toLowerCase());
+
+  if (!normalizedAllowedRoles.includes(normalizedRole)) {
     return res.status(403).json({
       success: false,
       message: 'You do not have permission to perform this action',
